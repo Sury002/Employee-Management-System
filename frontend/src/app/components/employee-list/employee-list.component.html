@@ -1,0 +1,316 @@
+<div class="min-h-screen p-4 md:p-6 transition-colors duration-300" [class]="isDarkMode ? 'dark-mode' : 'light-mode'">
+  <!-- Toolbar -->
+    <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between rounded-xl p-5 md:p-7 mb-6 shadow-lg transition-colors duration-300"
+    [class]="isDarkMode 
+      ? 'bg-gradient-to-r from-blue-800 to-purple-800' 
+      : 'bg-gradient-to-r from-blue-500 to-purple-500'"
+  >
+    <div class="mb-4 md:mb-0">
+      <h1 class="text-xl md:text-2xl font-bold text-white">Employee List</h1>
+      <p class="pt-2 text-xs md:text-sm transition-colors duration-300"
+        [class]="isDarkMode ? 'text-blue-200' : 'text-blue-100'">
+        Manage your team members efficiently
+      </p>
+    </div>
+
+    <!-- Search + Button -->
+    <div
+      class="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4"
+    >
+      <!-- Search -->
+      <div class="relative w-full md:w-64">
+        <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 transition-colors duration-300"
+          [class]="isDarkMode ? '!text-gray-400' : '!text-gray-500'">
+          search
+        </mat-icon>
+        <input
+          type="text"
+          [(ngModel)]="q"
+          (ngModelChange)="onSearchChange($event)"
+          placeholder="Search by name, email, role..."
+          class="w-full pl-10 pr-10 py-2 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-inner transition-colors duration-300"
+          [class]="isDarkMode 
+            ? 'bg-gray-700 text-white placeholder-gray-400' 
+            : 'bg-white text-gray-800 placeholder-gray-500 border border-gray-200'"
+        />
+        <button
+          *ngIf="q"
+          (click)="clearSearch()"
+          class="absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-300"
+          [class]="isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-700'"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <!-- Add Employee -->
+      <button
+        mat-raised-button
+        (click)="goToAddEmployee()"
+        class="!text-white !rounded-lg !transition-all !flex !items-center !shadow-md !justify-center !transition-colors !duration-300"
+        [class]="isDarkMode 
+          ? '!bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700' 
+          : '!bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600'"
+      >
+       <mat-icon>person_add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Container -->
+  <div
+    class="shadow-lg flex flex-col max-h-[calc(100vh-150px)] transition-colors duration-300 border" 
+    [class]="isDarkMode ? 'bg-gray-800 border-gray-800' : 'bg-white border-gray-300'"
+  >
+    <!-- Scrollable Table Wrapper -->
+    <div class="overflow-x-auto flex-1">
+      <div class="max-h-[calc(100vh-250px)] overflow-y-auto">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          (matSortChange)="onSortChange($event)"
+          class="w-full min-w-[600px] md:min-w-0"
+        >
+          <!-- Name -->
+          <ng-container matColumnDef="name">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="p-3 text-left font-medium transition-colors duration-300"
+              [class]="isDarkMode 
+                ? '!text-gray-300 !bg-gray-900' 
+                : '!text-gray-700 !bg-gray-300'"
+            >
+              Name
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let emp"
+              class="p-3 whitespace-nowrap text-left transition-colors duration-300"
+              [class]="isDarkMode 
+                ? 'border-t !border-gray-700' 
+                : 'border-t !border-gray-200'"
+            >
+              {{ emp.name }}
+            </td>
+          </ng-container>
+
+          <!-- Email -->
+          <ng-container matColumnDef="email">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="p-3 text-left font-medium transition-colors duration-300"
+              [class]="isDarkMode 
+                ? '!text-gray-300 !bg-gray-900' 
+                : '!text-gray-700 !bg-gray-300'"
+            >
+              Email
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let emp"
+              class="p-3 whitespace-nowrap text-left transition-colors duration-300"
+              [class]="isDarkMode 
+                ? 'border-t !border-gray-700' 
+                : 'border-t !border-gray-200'"
+            >
+              {{ emp.email }}
+            </td>
+          </ng-container>
+
+          <!-- Department -->
+          <ng-container matColumnDef="department">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="p-3 font-medium transition-colors duration-300"
+              [class]="isDarkMode 
+                ? '!text-gray-300 !bg-gray-900' 
+                : '!text-gray-700 !bg-gray-300'"
+            >
+              Department
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let emp"
+              class="p-3 whitespace-nowrap transition-colors duration-300"
+              [class]="isDarkMode 
+                ? 'border-t !border-gray-700' 
+                : 'border-t !border-gray-200'"
+            >
+              {{ emp.department?.name || "—" }}
+            </td>
+          </ng-container>
+
+          <!-- Role -->
+          <ng-container matColumnDef="role">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="p-3 font-medium transition-colors duration-300"
+              [class]="isDarkMode 
+                ? '!text-gray-300 !bg-gray-900' 
+                : '!text-gray-700 !bg-gray-300'"
+            >
+              Role
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let emp"
+              class="p-3 whitespace-nowrap transition-colors duration-300"
+              [class]="isDarkMode 
+                ? 'border-t !border-gray-700' 
+                : 'border-t !border-gray-200'"
+            >
+              {{ emp.role || "—" }}
+            </td>
+          </ng-container>
+
+          <!-- Age -->
+          <ng-container matColumnDef="age">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              class="p-3 font-medium transition-colors duration-300"
+              [class]="isDarkMode 
+                ? '!text-gray-300 !bg-gray-900' 
+                : '!text-gray-700 !bg-gray-300'"
+            >
+              Age
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let emp"
+              class="p-3 whitespace-nowrap transition-colors duration-300"
+              [class]="isDarkMode 
+                ? 'border-t !border-gray-700' 
+                : 'border-t !border-gray-200'"
+            >
+              {{ calculateAge(emp.dob) }}
+            </td>
+          </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="p-3 font-medium text-center transition-colors duration-300"
+              [class]="isDarkMode 
+                ? '!text-gray-300 !bg-gray-900' 
+                : '!text-gray-700 !bg-gray-300'"
+            >
+              Actions
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let emp"
+              class="p-3 text-center whitespace-nowrap transition-colors duration-300"
+              [class]="isDarkMode 
+                ? 'border-t !border-gray-700' 
+                : 'border-t !border-gray-200'"
+            >
+              <div class="flex justify-center">
+                <button
+                  mat-icon-button
+                  class="mx-1 transition-colors duration-300"
+                  [class]="isDarkMode 
+                    ? '!text-blue-400 hover:!text-blue-300' 
+                    : '!text-blue-500 hover:!text-blue-600'"
+                  matTooltip="View"
+                  (click)="view(emp._id)"
+                >
+                  <mat-icon>account_circle</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  class="mx-1 transition-colors duration-300"
+                  [class]="isDarkMode 
+                    ? '!text-green-400 hover:!text-green-300' 
+                    : '!text-green-500 hover:!text-green-600'"
+                  matTooltip="Edit"
+                  (click)="edit(emp._id)"
+                >
+                  <mat-icon>edit_note</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  class="mx-1 transition-colors duration-300"
+                  [class]="isDarkMode 
+                    ? '!text-red-400 hover:!text-red-300' 
+                    : '!text-red-500 hover:!text-red-600'"
+                  matTooltip="Delete"
+                  (click)="confirmDelete(emp._id)"
+                >
+                  <mat-icon>delete_forever</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Header & Rows -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            class="transition-colors duration-200"
+            [class]="isDarkMode 
+              ? 'hover:!bg-gray-600 !bg-gray-800 !text-gray-300' 
+              : 'hover:!bg-gray-100 !bg-white !text-gray-800'"
+          ></tr>
+
+          <!-- Spinner Row -->
+          <tr *ngIf="loading">
+            <td
+              [attr.colspan]="displayedColumns.length"
+              class="p-8 text-center"
+            >
+              <mat-spinner diameter="50" [color]="isDarkMode ? 'primary' : 'accent'"></mat-spinner>
+            </td>
+          </tr>
+
+          <!-- No data row -->
+          <tr class="mat-row" *matNoDataRow>
+            <td
+              class="p-6 text-center transition-colors duration-300"
+              [class]="isDarkMode ? '!bg-gray-800 !text-gray-300' : '!bg-white !text-gray-700'"
+              [attr.colspan]="displayedColumns.length"
+            >
+              <div
+                class="flex flex-col items-center py-8 transition-colors duration-300"
+                [class]="isDarkMode ? '!bg-gray-800 !text-gray-300' : '!bg-white !text-gray-700'"
+              >
+                <mat-icon class="text-4xl mb-2 transition-colors duration-300"
+                  [class]="isDarkMode ? '!text-gray-400' : '!text-gray-500'">
+                  search_off
+                </mat-icon>
+                <p>No employees found</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Paginator -->
+      <mat-paginator
+      [length]="total"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      showFirstLastButtons
+      (page)="onPageChange($event)"
+      class="transition-colors duration-300"
+      [class]="isDarkMode ? '!bg-gray-900 !text-gray-300' : '!bg-gray-300 !text-gray-700'"
+    >
+    </mat-paginator>
+  </div>
+</div>

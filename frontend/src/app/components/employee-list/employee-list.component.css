@@ -1,0 +1,220 @@
+/* Dark mode styles */
+::ng-deep .dark-mode .mat-mdc-paginator {
+  background-color: #1f2937 !important;
+  color: #d1d5db !important;
+  border-top: 1px solid #374151;
+}
+
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-icon-button {
+  color: #d1d5db !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-select-value {
+  color: #d1d5db !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-select-arrow {
+  color: #f4f4f5 !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-first svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-previous svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-next svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-last svg {
+  fill: #f0eee9 !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-first:hover svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-previous:hover svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-next:hover svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-last:hover svg {
+  fill: #fde047 !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-first[disabled] svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-previous[disabled] svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-next[disabled] svg,
+::ng-deep .dark-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-last[disabled] svg {
+  fill: #6b7280 !important;
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-header-cell {
+  background-color: #111827 !important;
+  color: #d1d5db !important;
+}
+
+::ng-deep .dark-mode .mat-mdc-header-row {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Light mode styles */
+::ng-deep .light-mode .mat-mdc-paginator {
+  background-color: #f9fafb !important;
+  color: #374151 !important;
+  border-top: 1px solid #e5e7eb;
+}
+
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-icon-button {
+  color: #4b5563 !important;
+}
+
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-select-value {
+  color: #374151 !important;
+}
+
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-select-arrow {
+  color: #6b7280 !important;
+}
+
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-first svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-previous svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-next svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-last svg {
+  fill: #4b5563 !important;
+}
+
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-first:hover svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-previous:hover svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-next:hover svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-last:hover svg {
+  fill: #1e40af !important;
+}
+
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-first[disabled] svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-previous[disabled] svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-next[disabled] svg,
+::ng-deep .light-mode .mat-mdc-paginator .mat-mdc-paginator-navigation-last[disabled] svg {
+  fill: #9ca3af !important;
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+
+::ng-deep .light-mode .mat-mdc-header-cell {
+  background-color: #f3f4f6 !important;
+  color: #374151 !important;
+}
+
+::ng-deep .light-mode .mat-mdc-header-row {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Common styles for both modes */
+::ng-deep .mat-mdc-paginator .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+::ng-deep .mat-mdc-cell,
+::ng-deep .mat-mdc-header-cell {
+  border: none !important;
+}
+
+::ng-deep .mat-mdc-table {
+  table-layout: fixed;
+}
+
+::ng-deep .mat-mdc-header-cell,
+::ng-deep .mat-mdc-cell {
+  text-align: center;
+}
+
+::ng-deep .mat-column-department,
+::ng-deep .mat-column-role,
+::ng-deep .mat-column-age,
+::ng-deep .mat-column-actions {
+  text-align: center !important;
+}
+
+::ng-deep th.mat-column-department.mat-sort-header .mat-sort-header-container,
+::ng-deep th.mat-column-role.mat-sort-header .mat-sort-header-container,
+::ng-deep th.mat-column-age.mat-sort-header .mat-sort-header-container,
+::ng-deep th.mat-column-actions.mat-sort-header .mat-sort-header-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100%;
+  margin: 7px;
+}
+
+::ng-deep th.mat-column-department.mat-sort-header .mat-sort-header-content,
+::ng-deep th.mat-column-role.mat-sort-header .mat-sort-header-content,
+::ng-deep th.mat-column-age.mat-sort-header .mat-sort-header-content,
+::ng-deep th.mat-column-actions.mat-sort-header .mat-sort-header-content {
+  text-align: center !important;
+  flex: none;
+}
+
+::ng-deep th.mat-column-department.mat-sort-header .mat-sort-header-arrow,
+::ng-deep th.mat-column-role.mat-sort-header .mat-sort-header-arrow,
+::ng-deep th.mat-column-age.mat-sort-header .mat-sort-header-arrow,
+::ng-deep th.mat-column-actions.mat-sort-header .mat-sort-header-arrow {
+  margin-left: 0.25rem !important;
+}
+
+.mat-mdc-header-cell {
+  position: sticky !important;
+  top: 0;
+  z-index: 10;
+}
+
+::ng-deep .mat-mdc-table {
+  table-layout: fixed !important; 
+  width: 100% !important;
+  min-width: 850px !important; 
+}
+
+::ng-deep .mat-column-name { width: 150px !important; }
+::ng-deep .mat-column-email { width: 150px !important; }
+::ng-deep .mat-column-department { width: 150px !important; }
+::ng-deep .mat-column-role { width: 120px !important; }
+::ng-deep .mat-column-age { width: 80px !important; }
+::ng-deep .mat-column-actions { width: 150px !important; }
+
+/* Custom scrollbar for dark mode */
+.custom-scrollbar-dark::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar-dark::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 10px;
+}
+.custom-scrollbar-dark::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.6);
+  border-radius: 10px;
+}
+.custom-scrollbar-dark::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.8);
+}
+
+/* Custom scrollbar for light mode */
+.custom-scrollbar-light::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar-light::-webkit-scrollbar-track {
+  background: rgba(229, 231, 235, 0.5);
+  border-radius: 10px;
+}
+.custom-scrollbar-light::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 10px;
+}
+.custom-scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
+}
+
+/* Animation for table rows */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}

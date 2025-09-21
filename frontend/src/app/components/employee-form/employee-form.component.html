@@ -1,0 +1,722 @@
+<div class="min-h-screen w-full p-4 animate-fade-in">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="rounded-xl p-4 md:p-6 mb-6"
+    [class]="
+       isDarkMode
+          ? 'bg-gradient-to-r from-blue-800 to-purple-800'
+          : 'bg-gradient-to-r from-blue-500 to-purple-500'
+      "
+    >
+      <div class="flex items-center">
+        <a
+          (click)="cancel()"
+          class="flex items-center text-indigo-200 hover:text-white transition-colors duration-300 cursor-pointer mr-4"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+        </a>
+        <h2 class="text-xl md:text-2xl font-bold text-white">
+          {{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}
+        </h2>
+      </div>
+      <p class="text-blue-100 mt-1 text-sm md:text-base">
+        {{ isEditMode ? 'Update employee information' : 'Add a new team member to your organization' }}
+      </p>
+    </div>
+
+    <div 
+      class="rounded-xl p-4 md:p-6 border shadow-lg"
+      [class]="isDarkMode 
+        ? 'bg-gray-900 border-gray-700' 
+        : 'bg-white border-gray-200'"
+    >
+      <!-- Step Indicator -->
+      <div class="step-indicator-container mb-8">
+        <div class="relative">
+          <!-- Progress Bar -->
+          <div 
+            class="absolute left-3 right-3 top-1/3 transform -translate-y-1/2 h-1 rounded-full"
+            [class]="isDarkMode ? 'bg-gray-700' : 'bg-gray-200'"
+          >
+            <div 
+              class="h-full bg-indigo-900 rounded-full transition-all duration-500 ease-in-out"
+              [style.width]="((currentStep - 1) / (totalSteps - 1)) * 100 + '%'">
+            </div>
+          </div>
+          
+          <!-- Steps -->
+          <div class="relative flex justify-between">
+            <div 
+              *ngFor="let step of [1,2,3,4]; let i = index"
+              class="step"
+              [class.completed]="currentStep > i + 1"
+              [class.active]="currentStep === i + 1"
+              (click)="goToStep(i + 1)"
+              [class.dark]="isDarkMode">
+              <div class="step-number-container"
+              [class]="isDarkMode ? 'bg-gray-700 border-2 border-gray-600' : 'bg-gray-400 border-2 border-gray-300'"
+              >
+                <div 
+                  class="step-number flex items-center justify-center"
+                  [class]="isDarkMode 
+                    ? (currentStep === i + 1 ? 'border-indigo-600 text-white' 
+                      : (currentStep > i + 1 ? 'border-indigo-600 text-white' 
+                        : 'border-gray-300 text-white'))
+                    : (currentStep === i + 1 ? 'border-indigo-600 text-white' 
+                      : (currentStep > i + 1 ? 'border-indigo-600 text-white' 
+                        : 'border-gray-300 text-white'))"
+                >
+                  {{ i + 1 }}
+                </div>
+              </div>
+              <div 
+                class="step-label mt-1 text-xs font-medium"
+                [class]="isDarkMode 
+                  ? (currentStep === i + 1 ? 'text-indigo-300' 
+                    : (currentStep > i + 1 ? 'text-indigo-300' : 'text-gray-500'))
+                  : (currentStep === i + 1 ? 'text-indigo-600' 
+                    : (currentStep > i + 1 ? 'text-indigo-600' : 'text-gray-600'))"
+              >
+                {{ getStepLabel(i + 1) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="employeeForm" (ngSubmit)="submit()">
+        <!-- Step 1: Personal Information -->
+        <div class="form-section" [class.active]="currentStep === 1">
+          <h3 
+            class="text-md md:text-lg font-medium mb-4 flex items-center"
+            [class]="isDarkMode ? 'text-white' : 'text-gray-800'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-indigo-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            Personal Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Full Name *
+              </label>
+              <input
+                formControlName="name"
+                placeholder="Full name"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('name')?.touched && employeeForm.get('name')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('name')?.errors?.['required']">Name is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Email Address *
+              </label>
+              <input
+                formControlName="email"
+                type="email"
+                placeholder="Email"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('email')?.touched && employeeForm.get('email')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required</span>
+                <span *ngIf="employeeForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Phone Number *
+              </label>
+              <input
+                formControlName="phone"
+                placeholder="Phone"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('phone')?.touched && employeeForm.get('phone')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('phone')?.errors?.['required']">Phone number is required</span>
+                <span *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Please enter a valid phone number</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Date of Birth *
+              </label>
+              <input
+                type="date"
+                formControlName="dob"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('dob')?.touched && employeeForm.get('dob')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('dob')?.errors?.['required']">Date of birth is required</span>
+                <span *ngIf="employeeForm.get('dob')?.errors?.['ageValidator']">Employee must be at least 18 years old</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Employment Information -->
+        <div class="form-section" [class.active]="currentStep === 2">
+          <h3 
+            class="text-md md:text-lg font-medium mb-4 flex items-center"
+            [class]="isDarkMode ? 'text-white' : 'text-gray-800'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-indigo-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            Employment Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Department *
+              </label>
+              <select
+                formControlName="department"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              >
+                <option value="">Select Department</option>
+                <option 
+                  *ngFor="let d of departments" 
+                  [value]="d._id"
+                  [class]="isDarkMode ? 'bg-gray-800' : 'bg-white'"
+                >
+                  {{ d.name }}
+                </option>
+              </select>
+              <div
+                *ngIf="employeeForm.get('department')?.touched && employeeForm.get('department')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('department')?.errors?.['required']">Department is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Role *
+              </label>
+              <input
+                formControlName="role"
+                placeholder="Role"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('role')?.touched && employeeForm.get('role')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('role')?.errors?.['required']">Role title is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Employment Type *
+              </label>
+              <select
+                formControlName="employmentType"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              >
+                <option [class]="isDarkMode ? 'bg-gray-800' : 'bg-white'" value="">Select Type</option>
+                <option [class]="isDarkMode ? 'bg-gray-800' : 'bg-white'" value="full-time">Full-time</option>
+                <option [class]="isDarkMode ? 'bg-gray-800' : 'bg-white'" value="part-time">Part-time</option>
+                <option [class]="isDarkMode ? 'bg-gray-800' : 'bg-white'" value="contract">Contract</option>
+                <option [class]="isDarkMode ? 'bg-gray-800' : 'bg-white'" value="intern">Intern</option>
+              </select>
+              <div
+                *ngIf="employeeForm.get('employmentType')?.touched && employeeForm.get('employmentType')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('employmentType')?.errors?.['required']">Employment type is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Hire Date *
+              </label>
+              <input
+                type="date"
+                formControlName="hireDate"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('hireDate')?.touched && employeeForm.get('hireDate')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('hireDate')?.errors?.['required']">Hire date is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Salary ($)
+              </label>
+              <input
+                type="number"
+                formControlName="salary"
+                placeholder="Annual salary"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('salary')?.touched && employeeForm.get('salary')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('salary')?.errors?.['min']">Salary must be positive</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Employee ID *
+              </label>
+              <input
+                formControlName="employeeId"
+                placeholder="Employee ID"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('employeeId')?.touched && employeeForm.get('employeeId')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('employeeId')?.errors?.['required']">Employee ID is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Address Information -->
+        <div class="form-section" [class.active]="currentStep === 3">
+          <h3 
+            class="text-md md:text-lg font-medium mb-4 flex items-center"
+            [class]="isDarkMode ? 'text-white' : 'text-gray-800'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-indigo-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            Address Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Street Address *
+              </label>
+              <input
+                formControlName="line1"
+                placeholder="Street address"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('line1')?.touched && employeeForm.get('line1')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('line1')?.errors?.['required']">Street address is required</span>
+              </div>
+            </div>
+
+            <div class="md:col-span-2">
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Address Line 2
+              </label>
+              <input
+                formControlName="line2"
+                placeholder="Apartment, suite, etc."
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                City *
+              </label>
+              <input
+                formControlName="city"
+                placeholder="City"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('city')?.touched && employeeForm.get('city')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('city')?.errors?.['required']">City is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                State/Province *
+              </label>
+              <input
+                formControlName="state"
+                placeholder="State"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('state')?.touched && employeeForm.get('state')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('state')?.errors?.['required']">State is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                ZIP/Postal Code *
+              </label>
+              <input
+                formControlName="zip"
+                placeholder="ZIP code"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('zip')?.touched && employeeForm.get('zip')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('zip')?.errors?.['required']">ZIP code is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Country *
+              </label>
+              <input
+                formControlName="country"
+                placeholder="Country"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('country')?.touched && employeeForm.get('country')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('country')?.errors?.['required']">Country is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Emergency Contact -->
+        <div class="form-section" [class.active]="currentStep === 4">
+          <h3 
+            class="text-md md:text-lg font-medium mb-4 flex items-center"
+            [class]="isDarkMode ? 'text-white' : 'text-gray-800'"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-2 text-indigo-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+              />
+            </svg>
+            Emergency Contact
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Emergency Contact Name *
+              </label>
+              <input
+                formControlName="emergencyContactName"
+                placeholder="Full name"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('emergencyContactName')?.touched && employeeForm.get('emergencyContactName')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('emergencyContactName')?.errors?.['required']">Emergency contact name is required</span>
+              </div>
+            </div>
+
+            <div>
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Emergency Contact Phone *
+              </label>
+              <input
+                formControlName="emergencyContactPhone"
+                placeholder="Phone number"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('emergencyContactPhone')?.touched && employeeForm.get('emergencyContactPhone')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('emergencyContactPhone')?.errors?.['required']">Emergency contact phone is required</span>
+                <span *ngIf="employeeForm.get('emergencyContactPhone')?.errors?.['pattern']">Please enter a valid phone number</span>
+              </div>
+            </div>
+
+            <div class="md:col-span-2">
+              <label 
+                class="block text-sm font-medium mb-1"
+                [class]="isDarkMode ? 'text-gray-300' : 'text-gray-700'"
+              >
+                Emergency Contact Relationship *
+              </label>
+              <input
+                formControlName="emergencyContactRelationship"
+                placeholder="Relationship"
+                [class]="isDarkMode 
+                  ? 'w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-300'
+                  : 'w-full bg-white border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors duration-300'"
+              />
+              <div
+                *ngIf="employeeForm.get('emergencyContactRelationship')?.touched && employeeForm.get('emergencyContactRelationship')?.invalid"
+                class="text-red-500 text-xs mt-1"
+              >
+                <span *ngIf="employeeForm.get('emergencyContactRelationship')?.errors?.['required']">Relationship is required</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-8">
+          <button
+            type="button"
+            (click)="prevStep()"
+            *ngIf="currentStep > 1"
+            [class]="isDarkMode 
+              ? 'px-6 py-2.5 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700/50 transition-colors duration-300'
+              : 'px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-300'"
+          >
+            Previous
+          </button>
+          <div *ngIf="currentStep === 1" class="flex-1"></div>
+          
+          <button
+            type="button"
+            (click)="nextStep()"
+            *ngIf="currentStep < totalSteps"
+            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition-colors duration-300"
+          >
+            Next
+          </button>
+          
+          <button
+            type="submit"
+            *ngIf="currentStep === totalSteps"
+            [disabled]="employeeForm.invalid || isLoading"
+            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 disabled:bg-indigo-400 disabled:cursor-not-allowed transition-colors duration-300 flex items-center justify-center"
+          >
+            <svg
+              *ngIf="isLoading"
+              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            {{ isEditMode ? 'Update' : 'Create' }} Employee
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Popup Modal -->
+  <div
+    *ngIf="popup.visible"
+    class="fixed inset-0 flex items-center justify-center bg-black/50 z-50 p-4"
+  >
+    <div
+      [class]="isDarkMode 
+        ? 'bg-gray-800 text-white rounded-xl shadow-lg p-6 w-full max-w-md animate-fadeIn relative'
+        : 'bg-white text-gray-800 rounded-xl shadow-lg p-6 w-full max-w-md animate-fadeIn relative border border-gray-200'"
+    >
+      <h3
+        class="text-lg font-semibold mb-2"
+        [ngClass]="popup.type === 'success' ? 'text-green-600' : 'text-red-600'"
+      >
+        {{ popup.type === 'success' ? 'Success' : 'Error' }}
+      </h3>
+      <p [class]="isDarkMode ? 'text-gray-300' : 'text-gray-600'" class="text-sm mb-4">{{ popup.message }}</p>
+      <div class="flex justify-end">
+        <button
+          (click)="closePopup()"
+          class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white transition-colors"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
