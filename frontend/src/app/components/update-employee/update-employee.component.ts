@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
-import { DepartmentService } from '../../services/department-service.service'; 
+import { DepartmentService } from '../../services/department.service'; 
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { Subscription } from 'rxjs';

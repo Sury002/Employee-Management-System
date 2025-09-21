@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
-  private base = 'http://localhost:5000/api/employees';
+  private base = `${environment.apiUrl}/employees`;
   constructor(private http: HttpClient) {}
 
   getAll(opts?: { page?: number; limit?: number; q?: string; sortField?: string; sortDir?: string }) {

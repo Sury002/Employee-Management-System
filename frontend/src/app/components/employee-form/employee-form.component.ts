@@ -8,7 +8,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { EmployeeService } from '../../services/employee.service';
-import { DepartmentService } from '../../services/department-service.service';
+import { DepartmentService } from '../../services/department.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ThemeService } from '../../services/theme.service'; 
 import { Subscription } from 'rxjs';

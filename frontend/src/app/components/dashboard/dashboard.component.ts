@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import Chart from 'chart.js/auto';
 import { EmployeeService } from '../../services/employee.service';
-import { DepartmentService } from '../../services/department-service.service';
+import { DepartmentService } from '../../services/department.service';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../services/theme.service';
 import { Subscription } from 'rxjs';
