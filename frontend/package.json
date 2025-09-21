@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.0.0",
   "scripts": {
-    "build:netlify": "ng build --configuration production && move dist\\frontend\\browser\\_redirects dist\\frontend\\_redirects",
+    "build:netlify": "ng build --configuration production && cpx dist/frontend/browser/_redirects dist/frontend/",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
@@ -31,6 +31,7 @@
     "@angular/cli": "^17.3.12",
     "@angular/compiler-cli": "^17.3.0",
     "@types/jasmine": "~5.1.0",
+    "cpx": "^1.5.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
