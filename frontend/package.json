@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.0.0",
   "scripts": {
+    "build:netlify": "ng build --configuration production && move dist\\frontend\\browser\\_redirects dist\\frontend\\_redirects",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
